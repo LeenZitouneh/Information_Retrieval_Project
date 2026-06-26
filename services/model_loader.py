@@ -11,6 +11,7 @@ from services.preprocessing.text_preprocessor import preprocess_text
 
 from services.indexing.inverted_index import build_inverted_index
 
+from services.retrieval.embedding_vector_retriever import EmbeddingVectorRetriever
 from services.retrieval.tfidf_retriever import TFIDFRetriever
 
 from services.retrieval.bm25_retriever import BM25Retriever
@@ -103,6 +104,18 @@ embedding.fit(
 )
 
 
+# ==========================
+# Embedding + Vector Representation
+# ==========================
+
+embedding_vector = EmbeddingVectorRetriever(
+    model_name="minilm"
+)
+
+embedding_vector.fit(
+    documents,
+    doc_ids
+)
 
 # ===============================
 # Hybrid

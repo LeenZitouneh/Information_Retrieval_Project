@@ -112,6 +112,19 @@ embedding.fit(
     doc_ids
 )
 
+
+# ==========================
+# Embedding + Vector Representation
+# ==========================
+embedding_vector = EmbeddingVectorRetriever(
+    model_name="minilm"
+)
+
+embedding_vector.fit(
+    documents,
+    doc_ids
+)
+
 # =========================================
 # Hybrid Representation
 # =========================================
@@ -143,6 +156,8 @@ __all__ = [
 
     "embedding",
 
+    "embedding_vector",
+
     "hybrid",
 
     "documents",
@@ -157,6 +172,13 @@ __all__ = [
 
 ]
 
+
+
+
+
+
+
+"""
 
 # query_id, query_text = next(iter(queries_dbpedia.items()))
 # ============================
@@ -409,7 +431,7 @@ print(
 
 
 
-"""
+
 embedding_vector = EmbeddingVectorRetriever(
     model_name="minilm"
 )
@@ -430,7 +452,7 @@ for result in results:
     print(result["score"])
     print(result["document"])
     print("-" * 50)
-"""
+
 
 embedding = EmbeddingRetriever("minilm")
 embedding.fit(documents, doc_ids)
@@ -464,3 +486,5 @@ for result in vector_results:
     print(result["score"])
     print(result["document"])
     print("-" * 50)
+
+"""

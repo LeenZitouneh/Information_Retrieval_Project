@@ -18,6 +18,8 @@ from main import (
 
     embedding,
 
+    embedding_vector,
+
     hybrid,
 
     documents,
@@ -71,9 +73,9 @@ def evaluate_tfidf():
 
             query_id: {
 
-                r["doc_id"]: r["score"]
+                doc_ids[idx]: score
 
-                for r in results
+                for idx, score in results
 
             }
 
@@ -236,7 +238,68 @@ def evaluate_embedding():
 
 
 
+# ==============================
+# Embedding + Vector Evaluation
+# ==============================
 
+
+def evaluate_embedding_vector():
+
+
+    scores = {}
+
+
+
+    for query_id, query_text in list(
+        queries_dbpedia.items()
+    )[:NUMBER_OF_QUERIES]:
+
+
+        results = embedding_vector.search(
+
+            query_text,
+
+            top_k=10
+
+        )
+
+
+
+        run = {
+
+
+            query_id: {
+
+
+                r["doc_id"]: r["score"]
+
+                for r in results
+
+
+            }
+
+        }
+
+
+
+        scores.update(
+
+            evaluate(
+
+                {
+                    query_id:
+                    qrels_dbpedia[query_id]
+
+                },
+
+                run
+
+            )
+
+        )
+
+
+    return average_scores(scores)
 
 # ==============================
 # Hybrid Serial Evaluation
@@ -342,6 +405,12 @@ if __name__ == "__main__":
 
     )
 
+
+    print("\n========== Embedding + FAISS ==========")
+
+    print(
+        evaluate_embedding_vector()
+    )
 
 
     print("\n========== Hybrid Serial ==========")

@@ -32,6 +32,8 @@ from services.model_loader import (
 
     embedding,
 
+    embedding_vector,
+
     hybrid,
 
     documents,
@@ -54,6 +56,8 @@ search_service = SearchService(
     bm25=bm25,
 
     embedding=embedding,
+
+    embedding_vector=embedding_vector,
 
     hybrid=hybrid,
 
@@ -94,6 +98,8 @@ model = st.selectbox(
         "BM25",
 
         "Embedding",
+        
+        "Embedding + FAISS",
 
         "Hybrid Serial",
 

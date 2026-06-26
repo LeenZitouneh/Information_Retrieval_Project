@@ -25,6 +25,8 @@ class SearchService:
 
         embedding,
 
+        embedding_vector,
+
         hybrid,
 
         documents,
@@ -39,6 +41,8 @@ class SearchService:
         self.bm25 = bm25
 
         self.embedding = embedding
+
+        self.embedding_vector = embedding_vector
 
         self.hybrid = hybrid
 
@@ -149,6 +153,15 @@ class SearchService:
             )
 
 
+        elif model == "Embedding + FAISS":
+
+            results = self.embedding_vector.search(
+
+                processed_query,
+
+                top_k=10
+
+            )
 
         elif model == "Hybrid Parallel":
 
