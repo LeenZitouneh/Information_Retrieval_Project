@@ -6,6 +6,8 @@
 import sys
 import os
 
+from services.query.query_refinement import QueryRefiner
+
 
 sys.path.append(
     os.path.abspath(
@@ -75,7 +77,7 @@ search_service = SearchService(
 
 
 st.title(
-    "DBPedia Information Retrieval System"
+    "touche2020 Information Retrieval System"
 )
 
 
@@ -85,6 +87,11 @@ query = st.text_input(
 
 )
 
+refiner = QueryRefiner()
+
+query = refiner.refine_query(query)
+
+st.write("Refined query:", query)
 
 
 model = st.selectbox(
@@ -108,16 +115,6 @@ model = st.selectbox(
     ]
 
 )
-
-
-
-use_refinement = st.checkbox(
-
-    "Use Query Refinement"
-
-)
-
-
 
 # =========================================
 # BM25 Parameters
@@ -200,8 +197,6 @@ if st.button("Search"):
             query,
 
             model=model,
-
-            use_refinement=use_refinement
 
         )
 

@@ -78,23 +78,8 @@ class SearchService:
 
         model="TF-IDF",
 
-        use_refinement=False
 
     ):
-
-
-
-        # -----------------------------
-        # Query Refinement Option
-        # -----------------------------
-
-
-        if use_refinement:
-
-            query = self.query_refiner.refine_query(
-                query
-            )
-
 
 
         # -----------------------------

@@ -69,3 +69,4 @@ def build_inverted_index(
 
 
     return inverted_index
+

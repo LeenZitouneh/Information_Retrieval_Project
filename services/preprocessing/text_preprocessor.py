@@ -128,3 +128,21 @@ def preprocess_text(text):
     # ------------------------------
 
     return " ".join(tokens)
+
+# ==============================
+# Test
+# ==============================
+
+if __name__ == "__main__":
+
+    sample_text = """
+    Running runners are studying Information Retrieval systems!
+    The cars were parked outside the universities, and people
+    were searching for relevant documents.
+    """
+
+    print("Original Text:")
+    print(sample_text)
+
+    print("\nProcessed Text:")
+    print(preprocess_text(sample_text))

@@ -26,9 +26,9 @@ from main import (
 
     doc_ids,
 
-    queries_dbpedia,
+    queries,
 
-    qrels_dbpedia
+    qrels
 
 )
 
@@ -55,7 +55,7 @@ def evaluate_tfidf():
 
 
     for query_id, query_text in list(
-        queries_dbpedia.items()
+        queries.items()
     )[:NUMBER_OF_QUERIES]:
 
 
@@ -89,7 +89,7 @@ def evaluate_tfidf():
 
                 {
                     query_id:
-                    qrels_dbpedia[query_id]
+                    qrels[query_id]
                 },
 
                 run
@@ -118,7 +118,7 @@ def evaluate_bm25():
 
 
     for query_id, query_text in list(
-        queries_dbpedia.items()
+        queries.items()
     )[:NUMBER_OF_QUERIES]:
 
 
@@ -155,7 +155,7 @@ def evaluate_bm25():
 
                 {
                     query_id:
-                    qrels_dbpedia[query_id]
+                    qrels[query_id]
 
                 },
 
@@ -186,7 +186,7 @@ def evaluate_embedding():
 
 
     for query_id, query_text in list(
-        queries_dbpedia.items()
+        queries.items()
     )[:NUMBER_OF_QUERIES]:
 
 
@@ -223,7 +223,7 @@ def evaluate_embedding():
 
                 {
                     query_id:
-                    qrels_dbpedia[query_id]
+                    qrels[query_id]
 
                 },
 
@@ -251,7 +251,7 @@ def evaluate_embedding_vector():
 
 
     for query_id, query_text in list(
-        queries_dbpedia.items()
+        queries.items()
     )[:NUMBER_OF_QUERIES]:
 
 
@@ -288,7 +288,7 @@ def evaluate_embedding_vector():
 
                 {
                     query_id:
-                    qrels_dbpedia[query_id]
+                    qrels[query_id]
 
                 },
 
@@ -314,7 +314,7 @@ def evaluate_hybrid_serial():
 
 
     for query_id, query_text in list(
-        queries_dbpedia.items()
+        queries.items()
     )[:NUMBER_OF_QUERIES]:
 
 
@@ -351,7 +351,7 @@ def evaluate_hybrid_serial():
 
                 {
                     query_id:
-                    qrels_dbpedia[query_id]
+                    qrels[query_id]
 
                 },
 

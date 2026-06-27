@@ -22,21 +22,17 @@ from services.retrieval.hybrid_retriever import HybridRetriever
 
 
 
-print("Loading DBPedia...")
+print("Loading touche2020...")
 
 
 corpus, queries, qrels = GenericDataLoader(
-    data_folder="data/dbpedia/dbpedia-entity"
+    data_folder="data/touche/webis-touche2020"
 ).load(split="test")
 
 
 
-# نفس التصغير الذي عملناه
-
-small_corpus = dict(
-    list(corpus.items())[:1000]
-)
-
+#full_corpus = corpus
+full_corpus = dict(list(corpus.items())[:500])
 
 
 documents = []
@@ -45,7 +41,7 @@ doc_ids = []
 
 
 
-for doc_id, doc in small_corpus.items():
+for doc_id, doc in full_corpus.items():
 
 
     text = preprocess_text(

@@ -1,5 +1,6 @@
 from spellchecker import SpellChecker
 
+from nltk.corpus import wordnet
 
 # =====================================
 # Query Refinement Service
@@ -41,41 +42,6 @@ class QueryRefiner:
 
         self.spell = SpellChecker()
 
-        self.synonyms = {
-
-
-            "car": [
-                "automobile",
-                "vehicle"
-            ],
-
-
-            "food": [
-                "cuisine",
-                "dish"
-            ],
-
-
-            "war": [
-                "conflict",
-                "battle"
-            ],
-
-
-            "museum": [
-                "gallery",
-                "exhibition"
-            ],
-
-
-            "architecture": [
-                "building",
-                "design"
-            ]
-
-        }
-
-
 
     # =====================================
     # Query Expansion
@@ -95,12 +61,19 @@ class QueryRefiner:
         for word in words:
 
 
-            if word in self.synonyms:
+            synonyms = []
 
+            for syn in wordnet.synsets(word):
 
-                expanded_words.extend(
-                    self.synonyms[word]
-                )
+                for lemma in syn.lemmas():
+
+                    synonym = lemma.name().replace("_", " ")
+
+                    if synonym != word and synonym not in synonyms:
+
+                        synonyms.append(synonym)
+
+            expanded_words.extend(list(synonyms)[:3])
 
 
 
@@ -120,3 +93,4 @@ class QueryRefiner:
         )
 
         return expanded_query
+    

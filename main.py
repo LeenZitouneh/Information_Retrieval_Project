@@ -13,24 +13,22 @@ from services.query.query_processor import QueryProcessor
 from services.query.query_refinement import QueryRefiner
 from services.ranking.ranker import Ranker
 
-print("Loading DBPedia...")
+print("Loading touche2020...")
 
-corpus_dbpedia, queries_dbpedia, qrels_dbpedia = GenericDataLoader(
-    data_folder="data/dbpedia/dbpedia-entity"
+corpus, queries, qrels = GenericDataLoader(
+    data_folder="data/touche/webis-touche2020"
 ).load(split="test")
 
 
-# ============================
-# تصغير البيانات للتجربة
-# ============================
-small_corpus = dict(
-    list(corpus_dbpedia.items())[:1000]
-)
-
+#full_corpus = corpus
+full_corpus = dict(list(corpus.items())[:500])
 
 print(
+
     "Documents used:",
-    len(small_corpus)
+
+    len(full_corpus)
+
 )
 
 # ============================
@@ -42,7 +40,7 @@ documents = []
 doc_ids = []
 
 
-for doc_id, doc in small_corpus.items():
+for doc_id, doc in full_corpus.items():
 
     text = preprocess_text(
         doc["title"] + " " + doc["text"]
@@ -62,7 +60,7 @@ print("Building Inverted Index...")
 
 
 index = build_inverted_index(
-    small_corpus,
+    full_corpus,
     preprocess_text
 )
 
@@ -166,325 +164,8 @@ __all__ = [
 
     "index",
 
-    "queries_dbpedia",
+    "queries",
 
-    "qrels_dbpedia"
+    "qrels"
 
 ]
-
-
-
-
-
-
-
-"""
-
-# query_id, query_text = next(iter(queries_dbpedia.items()))
-# ============================
-# Evaluation
-# ============================
-
-
-tfidf_scores = {}
-
-
-bm25_scores = {}
-
-# ============================
-# Query Processor
-# ============================
-
-query_processor = QueryProcessor(
-    preprocess_text
-)
-
-query_refiner = QueryRefiner()
-
-
-
-for query_id, query_text in list(queries_dbpedia.items())[:100]:
-
-
-
-# ==========================
-# Query Refinement
-# ==========================
-
-    refined_query = query_refiner.refine_query(
-        query_text
-    )
-
-# ==========================
-# Query Processing
-# ==========================
-
-
-    processed_query = query_processor.process(
-        refined_query
-    )
-
-# ==========================
-# Evaluation
-# ==========================
-
-
-print("\n========== TF-IDF ==========")
-
-print(
-    average_scores(tfidf_scores)
-)
-
-
-
-print("\n========== BM25 ==========")
-
-print(
-    average_scores(bm25_scores)
-)
-
-
-
-print("\n========== Embedding ==========")
-
-
-embedding = EmbeddingRetriever()
-
-
-embedding.fit(
-    documents,
-    doc_ids
-)
-
-
-embedding_results = embedding.search(
-    query_text,
-    top_k=10
-)
-
-
-
-embedding_run = {
-
-    query_id: {
-
-        r["doc_id"]: r["score"]
-
-        for r in embedding_results
-
-    }
-
-}
-
-
-
-embedding_scores = evaluate(
-
-    {
-        query_id: qrels_dbpedia[query_id]
-    },
-
-    embedding_run
-
-)
-
-
-
-print(
-    average_scores(
-        embedding_scores
-    )
-)
-
-
-
-print("\n==========Serial Hybrid ==========")
-
-
-hybrid = HybridRetriever(
-
-    bm25_retriever=bm25,
-
-    embedding_retriever=embedding
-
-)
-
-
-hybrid_results = hybrid.serial_search(
-
-    processed_query,
-    
-    top_k=10,
-
-    candidates=100
-
-
-)
-
-
-
-
-hybrid_run = {
-
-
-    query_id: {
-
-
-        r["doc_id"]: r["score"]
-
-
-        for r in hybrid_results
-
-
-    }
-
-}
-
-
-
-hybrid_scores = evaluate(
-
-    {
-        query_id: qrels_dbpedia[query_id]
-    },
-
-    hybrid_run
-
-)
-
-
-
-print(
-
-    average_scores(
-
-        hybrid_scores
-
-    )
-
-)
-
-
-print("\n==========Parallel Hybrid ==========")
-
-
-hybrid = HybridRetriever(
-
-    bm25_retriever=bm25,
-
-    embedding_retriever=embedding
-
-)
-
-
-hybrid_results = hybrid.parallel_search(
-
-    processed_query,
-    
-    tfidf ,
-
-    doc_ids
-
-)
-
-
-hybrid_run = {
-
-
-    query_id: {
-
-
-        r["doc_id"]: r["score"]
-
-
-        for r in hybrid_results
-
-
-    }
-
-}
-
-
-
-hybrid_scores = evaluate(
-
-    {
-        query_id: qrels_dbpedia[query_id]
-    },
-
-    hybrid_run
-
-)
-
-
-
-print(
-
-    average_scores(
-
-        hybrid_scores
-
-    )
-
-)
-
-
-
-
-
-embedding_vector = EmbeddingVectorRetriever(
-    model_name="minilm"
-)
-
-embedding_vector.fit(
-    documents,
-    doc_ids
-)
-
-results = embedding_vector.search(
-    "museum",
-    top_k=5
-)
-
-for result in results:
-
-    print(result["doc_id"])
-    print(result["score"])
-    print(result["document"])
-    print("-" * 50)
-
-
-embedding = EmbeddingRetriever("minilm")
-embedding.fit(documents, doc_ids)
-
-embedding_results = embedding.search(
-    "museum",
-    top_k=5
-)
-
-print("\n===== Embedding =====")
-
-for result in embedding_results:
-
-    print(result["doc_id"])
-    print(result["score"])
-    print("-" * 50)
-
-embedding_vector = EmbeddingVectorRetriever("minilm")
-embedding_vector.fit(documents, doc_ids)
-
-vector_results = embedding_vector.search(
-    "museum",
-    top_k=5
-)
-
-print("\n===== Embedding + FAISS =====")
-
-for result in vector_results:
-
-    print(result["doc_id"])
-    print(result["score"])
-    print(result["document"])
-    print("-" * 50)
-
-"""
