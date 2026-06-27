@@ -3,7 +3,7 @@
 ## Project Structure
 
 ```text
-C:.
+
 │   .gitignore
 │   main.py
 │   
