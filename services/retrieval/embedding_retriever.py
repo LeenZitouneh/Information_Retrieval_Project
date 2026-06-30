@@ -157,7 +157,7 @@ class EmbeddingRetriever:
 
 
     # =====================================
-    # Word2Vec Document Vector
+    # Word2vecDocument Vector
     # =====================================
 
 

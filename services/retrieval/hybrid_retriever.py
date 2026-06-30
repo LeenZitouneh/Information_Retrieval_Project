@@ -109,7 +109,10 @@ class HybridRetriever:
     # for candidates
     # ---------------------------------
 
-
+        if len(candidate_documents) == 0:
+            return []
+        
+        
         candidate_embeddings = (
 
             self.embedding.model.encode(

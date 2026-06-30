@@ -24,7 +24,7 @@ def build_inverted_index(
     documents_words = {}
 
 
-    for doc_id, doc in corpus.items():
+    for index, (doc_id, doc) in enumerate(corpus.items()):
 
 
         text = preprocess_text(
@@ -41,7 +41,7 @@ def build_inverted_index(
         words = text.split()
 
 
-        documents_words[doc_id] = words
+        documents_words[index] = words
 
 
         term_frequency.update(words)
@@ -54,7 +54,7 @@ def build_inverted_index(
     # ==========================
 
 
-    for doc_id, words in documents_words.items():
+    for index, words in documents_words.items():
 
 
         for word in words:
@@ -64,7 +64,7 @@ def build_inverted_index(
 
 
                 inverted_index[word].add(
-                    doc_id
+                    index
                 )
 
 

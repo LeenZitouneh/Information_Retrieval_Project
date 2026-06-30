@@ -9,21 +9,26 @@ class BM25Retriever:
 
         self,
 
+        inverted_index,
+
         k1=1.5,
 
         b=0.75
 
     ):
 
+        self.inverted_index = inverted_index
 
         # BM25 Parameters
+        
+        self.k1 = k1  #TF Saturation.
 
-        self.k1 = k1
-
-        self.b = b
+        self.b = b    #length of doc -> 1 no long
 
 
         self.bm25 = None
+
+        self.documents = None
 
 
 
@@ -34,6 +39,8 @@ class BM25Retriever:
 
     def fit(self, documents):
 
+
+        self.documents = documents
 
         tokenized_docs = [
 
@@ -53,6 +60,7 @@ class BM25Retriever:
             b=self.b
 
         )
+        #عدد الوثائق التي تحتوي على كلمة معينة مرة واحدة على الأقل
 
 
 
@@ -106,6 +114,41 @@ class BM25Retriever:
         tokenized_query = query.split()
 
 
+    # ==========================
+    # Candidate Documents
+    # ==========================
+
+        candidate_indices = set()
+
+        for term in tokenized_query:
+
+            if term in self.inverted_index:
+
+                candidate_indices.update(
+
+                    self.inverted_index[term]
+
+                )
+
+        if not candidate_indices:
+
+            print("No candidate documents found.")
+
+            return []
+
+        candidate_indices = list(candidate_indices)
+
+        print(
+
+            f"Searching in {len(candidate_indices)} candidate documents "
+            f"instead of {len(self.documents)}"
+
+        )
+
+
+    # ==========================
+    # BM25 Scores
+    # =========================
 
         scores = self.bm25.get_scores(
 
@@ -114,15 +157,23 @@ class BM25Retriever:
         )
 
 
-
-        ranked = scores.argsort()[::-1]
-
-
-
-        return [
+        candidate_scores = [
 
             (idx, scores[idx])
 
-            for idx in ranked[:top_k]
+            for idx in candidate_indices
 
         ]
+
+
+        candidate_scores.sort(
+
+             key=lambda x: x[1],
+
+            reverse=True
+
+        )
+
+
+
+        return candidate_scores[:top_k]

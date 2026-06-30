@@ -32,7 +32,7 @@ corpus, queries, qrels = GenericDataLoader(
 
 
 #full_corpus = corpus
-full_corpus = dict(list(corpus.items())[:500])
+full_corpus = dict(list(corpus.items())[:5000])
 
 
 documents = []
@@ -57,12 +57,24 @@ for doc_id, doc in full_corpus.items():
 
 
 
+index = build_inverted_index(
+    full_corpus,
+    preprocess_text
+)
+
+
+print(
+    "Unique Terms:",
+    len(index)
+)
+
+
 # ===============================
 # TF-IDF
 # ===============================
 
 
-tfidf = TFIDFRetriever()
+tfidf = TFIDFRetriever(index)
 
 tfidf.fit(
     documents
@@ -75,7 +87,7 @@ tfidf.fit(
 # ===============================
 
 
-bm25 = BM25Retriever()
+bm25 = BM25Retriever(index)
 
 bm25.fit(
     documents

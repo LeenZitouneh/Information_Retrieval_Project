@@ -4,14 +4,10 @@ from services.preprocessing.text_preprocessor import preprocess_text
 from services.indexing.inverted_index import build_inverted_index
 from services.retrieval.embedding_vector_retriever import EmbeddingVectorRetriever
 from services.retrieval.tfidf_retriever import TFIDFRetriever
-from services.retrieval.search_engine import SearchEngine
 from services.retrieval.bm25_retriever import BM25Retriever
-from services.evaluation.evaluator import evaluate, average_scores
 from services.retrieval.embedding_retriever import EmbeddingRetriever
 from services.retrieval.hybrid_retriever import HybridRetriever
-from services.query.query_processor import QueryProcessor
-from services.query.query_refinement import QueryRefiner
-from services.ranking.ranker import Ranker
+
 
 print("Loading touche2020...")
 
@@ -21,7 +17,7 @@ corpus, queries, qrels = GenericDataLoader(
 
 
 #full_corpus = corpus
-full_corpus = dict(list(corpus.items())[:500])
+full_corpus = dict(list(corpus.items())[:5000])
 
 print(
 
@@ -77,7 +73,7 @@ print(
 # ============================
 
 
-tfidf  = TFIDFRetriever()
+tfidf = TFIDFRetriever(index)
 
 tfidf .fit(
     documents
@@ -90,7 +86,7 @@ tfidf .fit(
 # ============================
 
 
-bm25 = BM25Retriever()
+bm25 = BM25Retriever(index)
 
 bm25.fit(
     documents

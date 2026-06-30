@@ -86,7 +86,7 @@ class SearchService:
         # Query Processing
         # -----------------------------
 
-
+        
         processed_query = self.query_processor.process(
 
             query
